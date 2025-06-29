@@ -13,4 +13,10 @@ export class InMemoryEventRepository implements EventRepository {
   async getAll(): Promise<Event[]> {
     return this.events;
   }
+
+  async findByDateRange(start: Date, end: Date): Promise<Event[]> {
+  return this.events.filter(event =>
+    event.getDate() >= start && event.getDate() <= end
+  );
+}
 }

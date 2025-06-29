@@ -61,6 +61,9 @@ export class Event {
         };
     }
 
+  public getDate(): Date {
+    return this.date;
+ }
   public isFull(currentParticipants: number): boolean {
     return currentParticipants >= this.maxParticipants;
   }
