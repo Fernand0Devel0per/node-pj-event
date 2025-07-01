@@ -11,7 +11,7 @@ export class DeleteEventUseCase {
   public async execute(id: string): Promise<Result<void>> {
     const event = await this.eventRepo.findById(id);
     if (!event) {
-      return Result.fail("Evento não encontrado.");
+      return Result.fail("Event not found.");
     }
 
     await this.eventRepo.delete(id);
