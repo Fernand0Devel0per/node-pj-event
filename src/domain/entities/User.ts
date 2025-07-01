@@ -62,6 +62,18 @@ export class User {
     return Result.ok(undefined);
   }
 
+    public updateRole(newRole: string): Result<void> {
+  const validation = UserValidator.validateRole(newRole);
+  if (validation.isFailure) {
+    return Result.fail(validation.error!);
+  }
+
+  this.role = newRole as UserRole;
+  this.updatedAt = new Date();
+  return Result.ok(undefined);
+}
+
+
   public toObject(): {
     id: string;
     name: string;

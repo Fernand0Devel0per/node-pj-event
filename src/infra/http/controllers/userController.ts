@@ -4,6 +4,9 @@ import { StatusCodes, ReasonPhrases } from "http-status-codes";
 
 import { CreateUserSchema } from "../../../application/dtos/users/CreateUserDto";
 import { CreateUserUseCase } from "../../../domain/use-cases/user/CreateUserUseCase";
+import { UpdateUserRoleUseCase } from "../../../domain/use-cases/user/UpdateUserRoleUseCase";
+import { EventIdParamSchema } from "../../../application/dtos/events/EventIdDto";
+import { UpdateUserRoleSchema } from "../../../application/dtos/users/UpdateUserRoleDto";
 
 export async function createUserHandler(req: Request, res: Response): Promise<void> {
   const result = CreateUserSchema.safeParse(req.body);
@@ -30,4 +33,33 @@ export async function createUserHandler(req: Request, res: Response): Promise<vo
   res.status(StatusCodes.CREATED).json({
     message: ReasonPhrases.CREATED,
   });
+}
+
+export async function updateUserRoleHandler(req: Request, res: Response): Promise<void> {
+  const paramResult = EventIdParamSchema.safeParse(req.params);
+  const bodyResult = UpdateUserRoleSchema.safeParse(req.body);
+
+  if (!paramResult.success || !bodyResult.success) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      errors: {
+        ...(paramResult.error && paramResult.error.flatten()),
+        ...(bodyResult.error && bodyResult.error.flatten()),
+      },
+      message: ReasonPhrases.BAD_REQUEST,
+    });
+    return;
+  }
+
+  const { id } = paramResult.data;
+  const { role } = bodyResult.data;
+
+  const useCase = container.resolve(UpdateUserRoleUseCase);
+  const result = await useCase.execute(id, role);
+
+  if (result.isFailure) {
+    res.status(StatusCodes.BAD_REQUEST).json({ error: result.error });
+    return;
+  }
+
+  res.status(StatusCodes.NO_CONTENT).send();
 }

@@ -1,4 +1,5 @@
 import { Result } from "../../core/Result";
+import { UserRole } from "../value-objects/UserRole";
 
 export class UserValidator {
   public static validateName(name: string): Result<void, string> {
@@ -28,6 +29,15 @@ export class UserValidator {
     if (missing.length > 0) {
       return Result.fail("All fields are required.");
     }
+    return Result.ok(undefined);
+  }
+
+  public static validateRole(role: string): Result<void, string> {
+    const validRoles = Object.values(UserRole);
+    if (!validRoles.includes(role as UserRole)) {
+      return Result.fail("Invalid role. Must be one of: " + validRoles.join(", "));
+    }
+
     return Result.ok(undefined);
   }
 }
