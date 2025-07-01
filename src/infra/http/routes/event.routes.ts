@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { createEventHandler, deleteEventHandler, getEventsByDateRangeHandler, updateEventHandler } from "../controllers/EventController"; 
+import { createEventHandler, deleteEventHandler, getEventsByDateRangeHandler, updateEventHandler } from "../controllers/eventController"; 
 
 const router = Router();
 
-router.post("/events", createEventHandler);
-router.get("/events", getEventsByDateRangeHandler);
-router.delete("/events/:id", deleteEventHandler);
-router.patch("/events/:id", updateEventHandler);
+router.post("/", createEventHandler);
+router.get("/", getEventsByDateRangeHandler);
+router.delete("/:id", deleteEventHandler);
+router.patch("/:id", updateEventHandler);
 
 export default router;
